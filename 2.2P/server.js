@@ -10,12 +10,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // GET endpoint at /add to add two numbers provided as query parameters
 app.get("/add", (req, res) => {
 	// Parse the numbers from the query parameters
-	const a = parseFloat(req.query.a);
-	const b = parseFloat(req.query.b);
+	const num1 = parseFloat(req.query.num1);
+	const num2 = parseFloat(req.query.num2);
 
 	// Calculate the sum
-	const sum = a + b;
-	res.send(`The sum of ${a} and ${b} is: ${sum}`);
+	const sum = num1 + num2;
+	res.send(`The sum of ${num1} and ${num2} is: ${sum}`);
 });
 
 // GET endpoint at /square to calculate the square of a number
