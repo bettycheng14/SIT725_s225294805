@@ -1,0 +1,52 @@
+.navbar-size {
+    width: 95%;
+    margin: 0 auto;
+}
+
+nav .brand-logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.main-body {
+    background-color: #f5e0d4;
+    color: #3E2723;
+    min-height: calc(100vh - 64px);
+}
+
+.materialboxed-image {
+    margin: 0 auto;
+    height: 400px;
+}
+
+nav {
+    background-color: #5D4037;
+}
+
+.btn {
+    background-color: #8D6E63 !important;
+}
+
+.btn:hover {
+    background-color: #795548 !important;
+}
+
+.click-me-button {
+    margin-top: 50px;
+}
+
+.card-reveal {
+    color: black;
+}
+
+.card-reveal .card-title,
+.card-reveal p {
+    color: black;
+}
+
+.card .card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
