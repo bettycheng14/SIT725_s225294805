@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Get all books</title>
+</head>
+
+<body>
+  <h1>Book Catalog</h1>
+  <div id="bookItemsDisplay"></div>
+
+  <script>
+    const btn = document.getElementById('fetchBookItemsBtn');
+    const out = document.getElementById('bookItemsDisplay');
+
+    function render(items) {
+      out.innerHTML = '';
+      if (!Array.isArray(items) || items.length === 0) {
+        out.textContent = 'No items';
+        return;
+      }
+      for (const it of items) {
+        const p = document.createElement('p');
+        p.textContent = `${it.title} by ${it.author}`;
+        out.appendChild(p);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      out.textContent = 'Loading...';
+      try {
+        const res = await fetch('/api/books');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body = await res.json();
+        render(body.data);
+      } catch (err) {
+        console.error('Error fetching book items:', err);
+        out.textContent = 'Error fetching book items.';
+      }
+    });
+  </script>
+</body>
+
+</html>
