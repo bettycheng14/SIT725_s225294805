@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Book Catalogue</title>
+  <style>
+    button {
+      background: #0b5e8b;
+      color: #fff;
+      border: 0;
+      padding: 10px 15px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-weight: bold
+    }
+
+    button:hover {
+      background: #09476b
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start
+    }
+
+    .box {
+      background: #e0e0e0;
+      padding: 15px;
+      min-width: 300px;
+      border: 1px solid #ccc;
+      display: none
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      padding: 4px
+    }
+
+    .list-item:hover {
+      text-decoration: underline;
+      background: #d5d5d5
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 8px 15px
+    }
+
+    .detail-label {
+      font-weight: bold;
+      color: #333
+    }
+  </style>
+</head>
+
+<body>
+  <h3>Books Catalogue developed by s225294805</h3>
+  <p>Click the button below to get all food items from the server:</p>
+  <button id="fetchBookItemsBtn">Get all books</button>
+
+  <div class="container">
+    <div id="bookList" class="box"></div>
+    <div id="bookDetails" class="box"></div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('fetchBookItemsBtn');
+    const bookList = document.getElementById('bookList');
+    const bookDetails = document.getElementById('bookDetails');
+
+    function renderList(items) {
+      bookList.innerHTML = '';
+      bookList.style.display = 'block';
+      bookDetails.style.display = 'none';
+
+      if (!Array.isArray(items) || items.length === 0) {
+        bookList.textContent = 'No items found.';
+        return;
+      }
+
+      items.forEach(it => {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        let priceValue = it.price?.$numberDecimal || it.price;
+        div.innerText = `${it.title} ${priceValue} AUD`;
+        div.addEventListener('click', async () => await getBookDetails(it.id));
+        bookList.appendChild(div);
+      });
+    }
+
+    btn.addEventListener('click', async () => {
+      bookList.style.display = 'block';
+      bookList.textContent = 'Loading...';
+      bookDetails.style.display = 'none';
+      try {
+        const res = await fetch('/api/books');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        renderList((await res.json()).data);
+      } catch (err) {
+        bookList.textContent = 'Error fetching books.';
+      }
+    });
+
+    const getBookDetails = async (bookId) => {
+      bookDetails.style.display = 'block';
+      bookDetails.textContent = 'Loading details...';
+      try {
+        const res = await fetch(`/api/books/${bookId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const item = (await res.json()).data;
+        let priceValue = item.price?.$numberDecimal || item.price;
+
+        bookDetails.innerHTML = `
+          <div class="grid">
+            <div class="detail-label">Title:</div><div>${item.title}</div>
+            <div class="detail-label">Author:</div><div>${item.author}</div>
+            <div class="detail-label">Year:</div><div>${item.year}</div>
+            <div class="detail-label">Genre:</div><div>${item.genre}</div>
+            <div class="detail-label">Summary:</div><div>${item.summary}</div>
+            <div class="detail-label">Price (AUD):</div><div>${priceValue}</div>
+          </div>
+        `;
+      } catch (err) {
+        bookDetails.textContent = 'Error fetching book details.';
+      }
+    }
+  </script>
+</body>
+
+</html>
